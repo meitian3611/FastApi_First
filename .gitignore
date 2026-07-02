@@ -1,0 +1,41 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+
+# ---- 虚拟环境 ----
+.venv/
+venv/
+env/
+
+# ---- 环境变量 / 密钥（含数据库密码，不要提交） ----
+.env
+.env.*
+!.env.example
+
+# ---- 依赖锁文件（按需自行决定是否提交） ----
+# uv.lock
+
+# ---- 本地数据库文件 ----
+*.db
+*.sqlite
+*.sqlite3
+
+# ---- 测试 / 类型检查 / Lint 缓存 ----
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---- IDE ----
+.idea/
+
+# ---- 日志 ----
+*.log
+
+# ---- WorkBuddy 内部数据（非源码） ----
+.workbuddy/
