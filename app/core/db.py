@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import text
+from sqlalchemy import text, func
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     async_sessionmaker,
@@ -26,11 +26,11 @@ class Base(AsyncAttrs, DeclarativeBase):
     # 数据库侧默认值：时间由 DB 计算，任何写库方式都生效（含批量 UPDATE）
     # 注意：插入/更新后对象上不会自动有值，需 db.refresh(obj) 读回
     create_time: Mapped[datetime] = mapped_column(
-        server_default=text("CURRENT_TIMESTAMP"), comment="创建时间"
+        server_default=func.now(), comment="创建时间"
     )
     update_time: Mapped[datetime] = mapped_column(
-        server_default=text("CURRENT_TIMESTAMP"),
-        server_onupdate=text("CURRENT_TIMESTAMP"),
+        server_default=func.now(),
+        onupdate=func.now(),
         comment="更新时间",
     )
 
@@ -44,4 +44,9 @@ async def create_table():
 # 依赖项：每个请求创建一个 AsyncSession，请求结束自动关闭
 async def get_db():
     async with SessionLocal() as session:
-        yield session
+        try:
+            yield session
+            await session.commit()
+        except:
+            await session.rollback()
+            raise

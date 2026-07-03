@@ -13,7 +13,7 @@ class BookCreate(BaseModel):
 
 # 响应模型：from_attributes=True 允许直接读 ORM 对象来序列化
 class BookOut(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True) # 允许直接读 ORM 模型对象来序列化
     id: int
     book_name: str
     author: Optional[str] = None
@@ -21,3 +21,16 @@ class BookOut(BaseModel):
     publish_house: Optional[str] = None
     create_time: Optional[datetime] = None
     update_time: Optional[datetime] = None
+
+
+class DeleteBook(BaseModel):
+    id: int
+
+
+# 修改请求体
+class BookEdit(BaseModel):
+    id: int
+    book_name: Optional[str] = None
+    author: Optional[str] = None
+    price: Optional[float] = None
+    publish_house: Optional[str] = None
