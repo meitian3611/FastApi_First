@@ -18,7 +18,10 @@ FastAPI_First/
 │   ├── main.py         #   应用入口：app 组装 + lifespan 建表
 │   ├── core/           # 基础设施
 │   │   ├── config.py   #   pydantic-settings 配置
-│   │   └── db.py       #   异步引擎 / Base / SessionLocal / get_db / create_table
+│   │   ├── db.py       #   异步引擎 / Base / SessionLocal / get_db / create_table
+│   │   ├── response.py #   统一响应体 ApiResponse[DataT] + success()/fail()
+│   │   ├── exceptions.py # 业务异常 ApiError
+│   │   └── exception_handlers.py # 4 个全局异常处理器，register_exception_handlers(app) 挂载
 │   ├── models/         # ORM 模型（每张表一个文件）
 │   │   ├── __init__.py #   集中引入所有模型
 │   │   ├── books.py    #   Book 模型
@@ -38,6 +41,20 @@ FastAPI_First/
 ├── .gitignore
 └── test_main.http      # 接口请求示例
 ```
+
+## 统一响应与异常处理
+
+所有接口对外都返回同一套结构，前端只按 `code` 判断成功与否：
+
+```json
+{ "code": 0, "msg": "success", "data": { ... } }
+```
+
+- `app/core/response.py`：`ApiResponse[DataT]` 是泛型响应体，`success(data)` / `fail(code, msg)` 是构造器；router 用 `response_model=ApiResponse[BookOut]` 这样的写法声明。
+- `app/core/exceptions.py`：`ApiError` 是在 service / router 中 raise 的业务异常。
+- `app/core/exception_handlers.py` 集中定义并注册 4 个全局异常处理器：`ApiError`、FastAPI 的 `HTTPException`、`RequestValidationError`（参数校验失败）、以及兜底的 `Exception`；`app/main.py` 只调一次 `register_exception_handlers(app)`。它们都会被转成上面的统一响应体，业务代码里不用再散落 `try/except`。
+
+> 当前实现里 HTTP 状态码会随错误类型返回（如 422 / 500），`code` 字段与之保持一致。如果你们团队约定"无论成败都返回 HTTP 200，只用 `code` 区分"，把各处理器里的 `status_code` 改成 200 即可。
 
 ## 快速开始
 
