@@ -1,26 +1,6 @@
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from app.main import app
 
-from db import create_table
-from routers import all_routers
-import models  # 必须导入，否则 user/book 表不会注册到 Base
+if __name__ == "__main__":
+    import uvicorn
 
-
-# 应用生命周期：yield 前启动建表，之后进入运行期
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await create_table()
-    print("启动成功")
-    yield
-
-
-app = FastAPI(lifespan=lifespan)
-
-# 挂载所有路由；新增资源只需在 routers/__init__.py 登记
-for router in all_routers:
-    app.include_router(router)
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello FastApi"}
+    uvicorn.run("app.main:app", reload=True)

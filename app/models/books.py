@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import String, Float
 from sqlalchemy.orm import Mapped, mapped_column
 
-from db import Base
+from app.core.db import Base
 
 
 class Book(Base):

@@ -1,8 +1,9 @@
 from typing import Optional
+
 from sqlalchemy import String, Float
 from sqlalchemy.orm import Mapped, mapped_column
 
-from db import Base
+from app.core.db import Base
 
 
 # User 类对应数据库里的 user 表；__tablename__ 是真实表名

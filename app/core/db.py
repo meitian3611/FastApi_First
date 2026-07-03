@@ -8,12 +8,11 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-# 异步驱动 mysql+aiomysql；密码写死仅供学习，正式项目放 .env
-DATABASE_URL = "mysql+aiomysql://root:123456@127.0.0.1:3306/FastApi"
+from app.core.config import settings
 
 engine = create_async_engine(
-    DATABASE_URL,
-    echo=True,  # 打印SQL（上线建议关掉）
+    settings.database_url,
+    echo=settings.db_echo,
     pool_size=10,
     max_overflow=20,
 )

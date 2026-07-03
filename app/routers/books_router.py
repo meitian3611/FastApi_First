@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db import get_db
-from models import Book
-from schemas import BookCreate, BookOut
+from app.core.db import get_db
+from app.models import Book
+from app.schemas import BookCreate, BookOut
 
 # 每个资源一个 router；prefix 统一起始路径，tags 用于文档分组
 router = APIRouter(prefix="/books", tags=["books"])
