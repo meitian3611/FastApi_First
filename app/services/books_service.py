@@ -10,7 +10,7 @@ async def get_books(db: AsyncSession) -> list[Book]:
     return list(result.scalars().all())
 
 
-async def create_book(db: AsyncSession, payload: BookCreate) -> Book:
+async def create_books(db: AsyncSession, payload: BookCreate) -> Book:
     book = Book(**payload.model_dump())
     db.add(book)
     await db.commit()
