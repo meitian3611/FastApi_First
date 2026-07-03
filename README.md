@@ -27,6 +27,9 @@ FastAPI_First/
 │   ├── schemas/        # Pydantic 请求/响应模型
 │   │   ├── __init__.py #   集中引入
 │   │   └── book_schemas.py
+│   ├── services/       # 业务逻辑层（DB 操作在此，router 只做校验与调用）
+│   │   ├── __init__.py #   集中引入
+│   │   └── books_service.py
 │   └── routers/        # 路由（按资源拆分）
 │       ├── __init__.py #   all_routers 列表，main 循环挂载
 │       └── books_router.py
@@ -106,6 +109,6 @@ POST `/books` 请求体示例：
 
 - **异步 SQLAlchemy**：`create_async_engine` + `async_sessionmaker`，配合 `aiomysql` 异步驱动；处理函数用 `db: AsyncSession = Depends(get_db)` 注入会话。
 - **时间字段用数据库侧默认值**：`server_default=text("CURRENT_TIMESTAMP")` / `server_onupdate=...`，保证任何写入方式（含批量更新）时间都会自动刷新。注意：时间由数据库计算，不会自动进 Python 对象，需 `await db.refresh(obj)` 才能读到。
-- **按资源分层**：`models/` 放表结构，`schemas/` 放 Pydantic 模型，`routers/` 放接口。三个包的 `__init__.py` 各自集中引入 / 登记，新增资源只改对应 `__init__.py`，`main.py` 一行都不用动。
+- **按资源分层**：`models/` 放表结构，`schemas/` 放 Pydantic 模型，`services/` 放业务逻辑（DB 操作都在这层），`routers/` 只做参数校验与调用 service。四个包的 `__init__.py` 各自集中引入 / 登记，新增资源只改对应 `__init__.py`，`main.py` 一行都不用动。
 
 
