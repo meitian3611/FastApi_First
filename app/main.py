@@ -15,11 +15,11 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(lifespan=lifespan)
+fastapi = FastAPI(lifespan=lifespan)
 
 # 挂载所有路由；新增资源只需在 app/routers/__init__.py 登记
 for router in all_routers:
-    app.include_router(router)
+    fastapi.include_router(router)
 
 
 @app.get("/")
