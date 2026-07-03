@@ -18,6 +18,6 @@ def success(data: Any = None, msg: str = "success") -> ApiResponse:
     return ApiResponse(code=0, msg=msg, data=data)
 
 
-def fail(code: int, msg: str, data: Any = None) -> ApiResponse:
+def fail(code: int = 1, msg: str = "请求失败", data: Any = None) -> ApiResponse:
     # 失败：code 为业务错误码
     return ApiResponse(code=code, msg=msg, data=data)
