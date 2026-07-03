@@ -16,7 +16,6 @@ async def lifespan(app: FastAPI):
     yield
 
 
-# 直接在入口文件里创建 app，编辑器（PyCharm 等）才能静态识别到 FastAPI 实例
 app = FastAPI(lifespan=lifespan)
 
 # 挂载所有路由；新增资源只需在 app/routers/__init__.py 登记
@@ -30,4 +29,4 @@ async def root():
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("app.main:app", reload=True)
