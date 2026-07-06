@@ -10,10 +10,15 @@ class BookCreate(BaseModel):
     price: Optional[float] = None
     publish_house: Optional[str] = None
 
+# 查询请求 前端传递的参数模型
+class FilterParams(BaseModel):
+    model_config = {"extra": "forbid"} # 不允许传入未定义的接口参数
+    id: int |  None = None
+
 
 # 响应模型：from_attributes=True 允许直接读 ORM 对象来序列化
 class BookOut(BaseModel):
-    model_config = ConfigDict(from_attributes=True) # 允许直接读 ORM 模型对象来序列化
+    model_config = ConfigDict(from_attributes=True)  # 允许直接读 ORM 模型对象来序列化
     id: int
     book_name: str
     author: Optional[str] = None
