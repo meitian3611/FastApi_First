@@ -3,7 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import ApiError
 from app.models import Book
-from app.schemas.book_schemas import BookCreate, DeleteBook, BookEdit
+from app.schemas.book_schemas import BookCreate, DeleteBook, BookEdit, FilterParams
+from .paginate import pageInit
 
 
 # 封装 统一获取书本  id
@@ -23,15 +24,16 @@ async def get_book_by_name(db: AsyncSession, book_name: str) -> Book | None:
 
 
 # 获取书本：不传 book_id 就查全部
-async def get_book_list(db: AsyncSession, filter_params) -> list[Book]:
-    book_id = filter_params.id
+async def get_book_list(db: AsyncSession, filter_params: FilterParams) -> list[Book]:
+    stmt = select(Book)
 
-    if book_id is not None:
-        result = await db.execute(select(Book).where(Book.id == book_id))
-        return list(result.scalars().all())
+    if filter_params.id is not None:
+        stmt = stmt.where(Book.id == filter_params.id)
 
-    result = await db.execute(select(Book))
-    return list(result.scalars().all())
+    if filter_params.book_name:
+        stmt = stmt.where(Book.book_name.like(f"%{filter_params.book_name}%"))  # like 模糊查询
+
+    return await pageInit(db=db, stmt=stmt, page=filter_params.page, page_size=filter_params.page_size)
 
 
 # 添加书本

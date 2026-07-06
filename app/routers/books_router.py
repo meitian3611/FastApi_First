@@ -1,11 +1,10 @@
-from idlelib import query
 from typing import List, Union, Annotated
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_db
-from app.core.response import ApiResponse, success, fail
+from app.core.response import ApiResponse, success, Page
 from app.schemas.book_schemas import BookCreate, BookOut, DeleteBook, BookEdit, FilterParams
 from app.services.books_service import create_book, get_book_list, delete_book, update_book
 
@@ -17,8 +16,8 @@ from app.services.books_service import create_book, get_book_list, delete_book, 
 router = APIRouter(prefix="/books", tags=["books"])
 
 
-# 获取书本：不传 book_id 就查全部
-@router.get("/query", response_model=ApiResponse[List[BookOut]])
+# 获取书本列表  分页 + 模糊搜索 + id搜索
+@router.get("/query", response_model=ApiResponse[Page[BookOut]])
 async def list_books(filter_params: Annotated[FilterParams, Query()], db: AsyncSession = Depends(get_db)):
     return success(await get_book_list(db, filter_params))
 

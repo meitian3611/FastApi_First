@@ -21,3 +21,12 @@ def success(data: Any = None, msg: str = "success") -> ApiResponse:
 def fail(code: int = 1, msg: str = "请求失败", data: Any = None) -> ApiResponse:
     # 失败：code 为业务错误码
     return ApiResponse(code=code, msg=msg, data=data)
+
+T = TypeVar("T")
+
+
+class Page(BaseModel, Generic[T]):
+    total: int
+    page: int
+    page_size: int
+    data: list[T]
