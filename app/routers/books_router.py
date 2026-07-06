@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import get_db
 from app.core.response import ApiResponse, success, fail
 from app.schemas.book_schemas import BookCreate, BookOut, DeleteBook, BookEdit, FilterParams
-from app.services import create_book, get_book_list, delete_book, update_book
+from app.services.books_service import create_book, get_book_list, delete_book, update_book
 
 """
     router 只做参数校验与调用 service，业务逻辑下沉到 app/services

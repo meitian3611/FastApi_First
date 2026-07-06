@@ -14,7 +14,7 @@ import app.models  # 必须导入，否则 user/book 表不会注册到 Base
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_table()
-    print("服务启动成功")
+    print("- - - - 服务启动成功 - - - - ")
     yield
 
 

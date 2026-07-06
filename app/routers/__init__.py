@@ -2,4 +2,4 @@
 from .books_router import router as books_router
 
 all_routers = [books_router]
-__all__ = ["books_router", "all_routers"]
+__all__ = ["all_routers"]
