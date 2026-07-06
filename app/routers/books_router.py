@@ -32,16 +32,10 @@ async def add_book(payload: BookCreate, db: AsyncSession = Depends(get_db)):
 # 删除书本
 @router.post("/delete")
 async def del_book(payload: DeleteBook, db: AsyncSession = Depends(get_db)):
-    book = await get_book_list(db, payload)
-    if not book:
-        return fail(msg="书本不存在")
     return success(await delete_book(db, payload))
 
 
 # 修改书本信息
 @router.post("/update")
 async def edit_book(payload: BookEdit, db: AsyncSession = Depends(get_db)):
-    book = await get_book_list(db, payload)
-    if not book:
-        return fail(msg="书本不存在")
     return success(await update_book(db, payload))
