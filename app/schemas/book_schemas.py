@@ -1,11 +1,11 @@
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from typing import Optional, Annotated
+from pydantic import BaseModel, ConfigDict, Field
 
 from .common_schemas import BaseSchema
 
 """
-    请求模型
+    请求体模型
     前端需要传给接口的
 """
 
@@ -21,7 +21,8 @@ class BookCreate(BaseModel):
 # 查询 - 前端传递的参数模型
 class FilterParams(BaseModel):
     model_config = {"extra": "forbid"}  # 不允许传入未定义的接口参数
-    id: int | None = None
+
+    id: Annotated[int | None, Field(gt=0, description="ID范围")] = None
     book_name: str | None = None
     page: int = 1
     page_size: int = 10
@@ -60,4 +61,3 @@ class BookOut(BaseSchema):
     publish_house: Optional[str] = None
     create_time: Optional[datetime] = None
     update_time: Optional[datetime] = None
-
