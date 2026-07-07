@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import ApiError
 from app.models import Book
 from app.schemas.book_schemas import BookCreate, DeleteBook, BookEdit, FilterParams
-from .paginate import pageInit
+from app.services.utils.paginate import pageInit, apply_sort
 
 
 # 封装 统一获取书本  id
@@ -32,6 +32,17 @@ async def get_book_list(db: AsyncSession, filter_params: FilterParams) -> list[B
 
     if filter_params.book_name:
         stmt = stmt.where(Book.book_name.like(f"%{filter_params.book_name}%"))  # like 模糊查询
+
+    if filter_params.order_by:
+        # 可以进行排序的字段
+        SORT_FIELDS = {
+            "id": Book.id,
+            "book_name": Book.book_name,
+            "price": Book.price,
+            "create_time": Book.create_time,
+            "update_time": Book.update_time,
+        }
+        stmt = await apply_sort(stmt, filter_params, SORT_FIELDS)
 
     return await pageInit(db=db, stmt=stmt, page=filter_params.page, page_size=filter_params.page_size)
 

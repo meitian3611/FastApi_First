@@ -33,3 +33,18 @@ async def pageInit(
         "page": page,
         "page_size": page_size
     }
+
+
+"""
+封装 排序的公共函数
+
+"""
+async def apply_sort(stmt, params, sort_fields):
+    column = sort_fields.get(params.order_by)
+
+    if column is None:
+        return stmt
+
+    return stmt.order_by(
+        column.desc() if params.order == "desc" else column.asc()
+    )

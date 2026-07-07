@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
+from .common_schemas import BaseSchema
+
 """
     请求模型
     前端需要传给接口的
@@ -23,6 +25,9 @@ class FilterParams(BaseModel):
     book_name: str | None = None
     page: int = 1
     page_size: int = 10
+
+    order_by: str | None = None
+    order: str | None = None
 
 
 # 修改
@@ -46,9 +51,8 @@ class DeleteBook(BaseModel):
 
 
 # 响应模型：from_attributes=True 允许直接读 ORM 对象来序列化
-class BookOut(BaseModel):
-    model_config = ConfigDict(from_attributes=True)  # 允许直接读 ORM 模型对象来序列化
-
+# @field_serializer 函数处理字段 用来格式化指定字段
+class BookOut(BaseSchema):
     id: int
     book_name: str
     author: Optional[str] = None
@@ -56,3 +60,4 @@ class BookOut(BaseModel):
     publish_house: Optional[str] = None
     create_time: Optional[datetime] = None
     update_time: Optional[datetime] = None
+
